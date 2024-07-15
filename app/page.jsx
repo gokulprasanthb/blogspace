@@ -16,6 +16,19 @@ const Home = () => {
     .then(res => setPosts(res))
   },[]);
 
+  const searchPost = (e) => {
+
+      if (e.type == 'keydown' && e.key !== 'Enter') {
+        return;
+    }
+
+    setSearch(true)
+       fetch(process.env.NEXT_PUBLIC_API_URL+'/posts?q='+inputRef.current.value)
+      .then((res) => res.json() )
+      .then(res => setPosts(res))
+      .finally(() =>  setSearch(false))
+    }
+
   return (
     <section className="my-10 px-20">
     <main className="container mx-auto px-4 py-6">
@@ -23,8 +36,8 @@ const Home = () => {
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
     </main>
     <div className="flex justify-end px-4">
-      <input type="text" className="px-4 py-2 border border-gray-300 rounded-md" placeholder="Search..." />
-      <button className="px-4 py-2 bg-violet-500 text-white rounded-md ml-4"><FaSearch /></button>
+      <input onKeyDown={searchPost} disabled={search} ref={inputRef} type="text" className="px-4 py-2 border text-black border-gray-300 rounded-md" placeholder="Search..." />
+      <button onClick={searchPost} disabled={search} className="px-4 py-2 bg-violet-500 text-white rounded-md ml-4">{search?'...':<FaSearch />}</button>
     </div>
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-10">
       {posts.map((post) => (
@@ -36,6 +49,7 @@ const Home = () => {
           </div>
         </Link>)
       )}
+      {!posts.length > 0 && inputRef.current.value && <h3 className="w-full flex justify-center font-semibold text-xl py-24 pl-10"> No posts matches for your search: {inputRef.current.value}</h3>  }
     </div>
  </section>
   )
