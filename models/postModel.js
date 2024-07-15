@@ -5,7 +5,14 @@ const postSchema =  new Schema({
     description: String,
     image: String,
     created_at:String
-})
+},{ toJSON: { virtuals: true} });
+
+postSchema.virtual('small_description').get(function() {
+    return this.description.substr(0,100)+'...'
+});
+// postSchema.virtual('created_at').get(function() {
+//     return changeDateFormat(this.created_at)
+// });
 
 const PostModel = models.Post || model('Post', postSchema);
 
