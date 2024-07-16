@@ -1,4 +1,7 @@
-import React from 'react'
+export const metadata = {
+  title: "About Page",
+  description: "Read about BlogSpace"
+}
 
 const page = () => {
   return (
